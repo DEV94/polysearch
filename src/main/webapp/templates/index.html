@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -10,6 +11,13 @@
 
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic"/>
+
+    <link rel='stylesheet prefetch' href='https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.4/angular-material.css'/>
+    <link rel='stylesheet prefetch' href='https://material.angularjs.org/1.1.4/docs.css'/>
+
+    <link rel="stylesheet" href="/resources/css/style.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
 
     <!-- Custom styles for this template -->
     <style>
@@ -53,7 +61,62 @@
         #custom-search-input .glyphicon-search{
             font-size: 23px;
         }
+
+        div.stars {
+            width: 270px;
+            display: inline-block;
+        }
+
+        input.star { display: none; }
+
+        label.star {
+            float: right;
+            padding: 10px;
+            font-size: 36px;
+            color: #444;
+            transition: all .2s;
+        }
+
+        input.star:checked ~ label.star:before {
+            content: '\f005';
+            color: #FD4;
+            transition: all .25s;
+        }
+
+
+        input.star-5:checked ~ label.star:before {
+            color: #FE7;
+            text-shadow: 0 0 20px #952;
+        }
+
+
+        input.star-1:checked ~ label.star:before { color: #F62; }
+
+        label.star:hover { transform: rotate(-15deg) scale(1.3); }
+
+        label.star:before {
+            content: '\f006';
+            font-family: FontAwesome;
+        }
+
+
     </style>
+
+    <script>
+        // search function to match full text
+        $scope.localSearch = function(str, people) {
+            var matches = [];
+            people.forEach(function(person) {
+                var fullName = person.firstName + ' ' + person.surname;
+                if ((person.firstName.toLowerCase().indexOf(str.toString().toLowerCase()) >= 0) ||
+                    (person.surname.toLowerCase().indexOf(str.toString().toLowerCase()) >= 0) ||
+                    (fullName.toLowerCase().indexOf(str.toString().toLowerCase()) >= 0)) {
+                    matches.push(person);
+                }
+            });
+            return matches;
+        };
+    </script>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -63,7 +126,6 @@
 </head>
 
 <body>
-
 <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -77,10 +139,10 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Accueil</a></li>
-                <li><a href="#about">Créer Communauté</a></li>
+                <li class="active"><a href="index.html">Accueil</a></li>
+                <li><a href="creer.html">Créer Communauté</a></li>
                 <li><a href="#contact">Rejoindre Communauté</a></li>
-                <li><a href="#contact">Gérer Communauté</a></li>
+                <li><a href="gerer.html">Gérer Communauté</a></li>
                 <li><a href="#contact">Quitter Communauté</a></li>
             </ul>
         </div><!--/.nav-collapse -->
@@ -90,18 +152,71 @@
 <div class="container">
 
     <div class="row">
-        <div align="center">
-            <h2>PolySearch</h2>
-            <div id="custom-search-input" align="center">
-                <div class="input-group col-md-12" >
-                    <input type="text" class="form-control input-lg" placeholder="Search here .." />
-                    <span class="input-group-btn">
-                        <button class="btn btn-info btn-lg" type="button">
-                            <i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
+        <div>
+            <h2 align="center">PolySearch</h2>
+
+            <div ng-app="Test">
+
+                <div ng-app="Test">
+                    <div > <!--  ng-app="Test" -->
+
+                        <div class="form-group move-down" style="width:200px">
+                            <form th:action="@{/search}" method="POST" align="center">
+                                <input type="text" name="query" id="tags" />
+                                <button type="submit" value="->">Search</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <!--
+            Copyright 2016 Google Inc. All Rights Reserved.
+            Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
+            -->
+
+            <!--<form th:action="@{/search}" method="POST" align="center">
+                <input type="text" name="query2" />
+                <button type="submit" value="->">Search</button>
+            </form>
+
+            <div ng-controller="DemoCtrl as ctrl" layout="column" ng-cloak="" class="autocompletedemoCustomTemplate" ng-app="MyApp">
+                <md-content layout-padding="" layout="column">
+                    <form th:action="@{/search}" method="POST" >
+                        <md-autocomplete name="query" ng-disabled="ctrl.isDisabled" md-no-cache="ctrl.noCache" md-selected-item="ctrl.selectedItem" md-search-text-change="ctrl.searchTextChange(ctrl.searchText)" md-search-text="ctrl.searchText" md-selected-item-change="ctrl.selectedItemChange(item)" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.name" md-min-length="0" placeholder="Pick an Angular repository" md-menu-class="autocomplete-custom-template">
+                            <md-item-template>
+                                <span class="item-title">
+                                    <md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>
+                                    <span> {{item.name}} </span>
+                                </span>
+                                <span class="item-metadata">
+                                    <span>
+                                        <strong>{{item.watchers}}</strong> watchers
+                                    </span>
+                                    <span>
+                                        <strong>{{item.forks}}</strong> forks
+                                    </span>
+                                </span>
+                            </md-item-template>
+                        </md-autocomplete>
+                        <input type="submit"
+                               style="position: absolute; left: -9999px; width: 1px; height: 1px;"
+                               tabindex="-1" />
+                    </form>
+                </md-content>
+            </div>-->
+
+
+            <div class="row carousel-row" th:each="resultat: ${resultats}">
+                <div>
+                    <div>
+                        <span th:text="${resultat.text()}"><b></b></span><br/>
+                        <span><a th:href="${resultat.baseUri()}" th:text="${resultat.baseUri()}"></a></span>
+
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </div>
 
@@ -112,5 +227,18 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-route.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js'></script>
+<script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js'></script>
+<script src='https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.4/angular-material.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
+
+
+    <script src="/resources/js/index.js"></script>
 </body>
 </html>
