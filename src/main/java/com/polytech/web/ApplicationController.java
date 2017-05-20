@@ -5,14 +5,13 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.polytech.business.CommunauteService;
 import com.polytech.business.SignInService;
-import com.polytech.models.Communaute;
-import com.polytech.models.Requete;
-import com.polytech.models.User;
+import com.polytech.models.*;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,9 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by dev on 3/15/17.
@@ -40,33 +41,42 @@ public class ApplicationController {
     @Autowired
     private CommunauteService communauteService;
 
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() throws UnsupportedEncodingException {
 
+
+
         /*try {
-        HttpResponse<JsonNode> response = Unirest.get("https://faroo-faroo-web-search.p.mashape.com/api?q=google")
+            HttpResponse<JsonNode> response = Unirest.get("https://faroo-faroo-web-search.p.mashape.com/api?q=google&start=11")
                 .header("X-Mashape-Key", "EjT6SCFnnZmshYDFS0vCgw9gKCGMp1qccC2jsnJP9c4hUzjpnv")
                 .header("Accept", "application/json")
-                .asJson();
+                .asJson();*/
 
-            JSONObject myObj = response.getBody().getObject();
+            /*HttpResponse<JsonNode> response = Unirest.get("https://api.duckduckgo.com/?q=Test&format=json")
+                    .header("X-Mashape-Key", "EjT6SCFnnZmshYDFS0vCgw9gKCGMp1qccC2jsnJP9c4hUzjpnv")
+                    .header("Accept", "application/json")
+                    .asJson();*/
 
-            JSONArray arr = myObj.getJSONArray("resutls");
-
+            /*JSONObject myObj = response.getBody().getObject();
+            System.out.println(myObj);
+            JSONArray arr = myObj.getJSONArray("results");
+            System.out.println(arr.length());
             for(int i=0; i<arr.length(); i++){
                 JSONObject o = arr.getJSONObject(i);
-                System.out.println(o);
-            }
+                System.out.println(o.get("title"));
+                //System.out.println(o.get("title"));
+            }*/
 
             // extract fields from the object
             //String msg = myObj.getString("error_message");
             //JSONArray results = myObj.getJSONArray(msg);
-            System.out.println(myObj);
 
-        }catch(Exception e){
+
+        /*}catch(Exception e){
             e.printStackTrace();
-        }*/
-        System.out.println("IN");
+        }
+        System.out.println("IN");*/
         /*final String accountKey = "9fe8b6df90574d3a90b1b83d824c556c";
         final String bingUrlPattern = "https://api.cognitive.microsoft.com/bing/v5.0/search?Query=%%27%s%%27&$format=JSON";
 
@@ -178,21 +188,21 @@ public class ApplicationController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String search(Requete requete, Principal principal, Model model){
 
+        //Elements resultats = new Elements();
 
-
-
-
-        String google = "http://www.google.com/search?q=";
+        /*String google = "http://www.google.com/search?q=";
         String search = "stackoverflow";
         String charset = "UTF-8";
         String userAgent = "ExampleBot 1.0 (+http://example.com/bot)"; // Change this to your company's name and bot homepage!
 
-        requete.setUsername(principal.getName());
+        //search = requete.getQuery();
+
         System.out.println("# " + requete.getUsername() + " : " + requete.getQuery());
 
         try {
-            Elements resultats = Jsoup.connect(google + URLEncoder.encode(requete.getQuery(), charset)).userAgent(userAgent).get().select(".g>.r>a");
-
+            Elements resultats = Jsoup.connect(google + URLEncoder.encode(search, charset)).userAgent(userAgent).get().select(".g>.r>a");
+            //Elements resultats2 = Jsoup.connect(google + URLEncoder.encode(requete.getQuery()+"&start=10", charset)).userAgent(userAgent).get().select(".g>.r>a");
+            System.out.println(resultats.size());
             for (Element link : resultats) {
                 String title = link.text();
                 String url = link.absUrl("href"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".
@@ -205,8 +215,32 @@ public class ApplicationController {
                 System.out.println("Title: " + title);
                 System.out.println("URL: " + url);
             }
-            model.addAttribute("resultats", resultats);
-        }catch(Exception e){}
+
+
+            /*for (Element link2 : resultats2) {
+                String title2 = link2.text();
+                String url2 = link2.absUrl("href"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".
+                url2 = URLDecoder.decode(url2.substring(url2.indexOf('=') + 1, url2.indexOf('&')), "UTF-8");
+                link2.setBaseUri(url2);
+                if (!url2.startsWith("http")) {
+                    continue; // Ads/news/etc.
+                }
+            }
+            System.out.println(resultats.size());
+            System.out.println(resultats2.size());
+            //resultats.addAll(resultats);
+            resultats.addAll(resultats2);*/
+            FunnyCrawler obj = new FunnyCrawler();
+            Set<Result> result = obj.getDataFromGoogle(requete.getQuery());
+            for(Result temp : result){
+                System.out.println(temp.getTitle() + " | " + temp.getUri());
+            //System.out.println(temp.getUri());
+            }
+            System.out.println(result.size());
+            model.addAttribute("resultats", result);
+        /*}catch(Exception e){
+            e.printStackTrace();
+        }*/
         return "index";
     }
 

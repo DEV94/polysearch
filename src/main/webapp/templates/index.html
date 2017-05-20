@@ -162,7 +162,7 @@
 
                         <div class="form-group move-down" style="width:200px;">
                             <form th:action="@{/search}" method="POST">
-                                <input type="text" name="query" id="tags" style="width: 500px; left: 100px;" />
+                                <input type="text" name="query" id="tags" style="width: 500px; left: 500px;;" />
                                 <button type="submit"
                                         style="position: absolute; left: -9999px; width: 1px; height: 1px;"
                                         tabindex="-1">Search</button>
@@ -208,11 +208,11 @@
             </div>-->
 
 
-            <div class="row carousel-row" th:each="resultat: ${resultats}">
+            <div class="row carousel-row" th:each="result: ${resultats}">
                 <div>
                     <div>
-                        <span th:text="${resultat.text()}"><b></b></span><br/>
-                        <span><a th:href="${resultat.baseUri()}" th:text="${resultat.baseUri()}"></a></span>
+                        <span th:text="${result.getTitle()}"><b></b></span><br/>
+                        <span><a th:href="${result.getUri()}" th:text="${result.getUri()}"></a></span>
 
                     </div>
                 </div>
