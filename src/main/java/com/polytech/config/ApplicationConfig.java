@@ -1,5 +1,6 @@
 package com.polytech.config;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
@@ -34,7 +35,7 @@ public class ApplicationConfig {
     private String password;*/
 
 
-    /*@Bean("dataSource")
+    @Bean("dataSource")
     @Profile("PROD")
     public DataSource prodDataSource(){
         String driverClassName = environment.getProperty("datasource.driverClassName");
@@ -47,7 +48,7 @@ public class ApplicationConfig {
         dataSource.setUrl(url);
         dataSource.setDriverClassName(driverClassName);
         return dataSource;
-    }*/
+    }
 
     @Bean("dataSource")
     @Profile("DEV")
