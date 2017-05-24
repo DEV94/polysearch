@@ -1,6 +1,9 @@
 package com.polytech.models;
 
+import org.springframework.data.annotation.*;
+
 import javax.persistence.*;
+import javax.persistence.Id;
 
 /**
  * Created by E.Marouane on 12/05/2017.
@@ -10,9 +13,10 @@ import javax.persistence.*;
 public class Requete {
 
     @Id
+    @org.springframework.data.annotation.Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private double id;
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
     @Column(name = "query")
     private String query;
@@ -24,13 +28,13 @@ public class Requete {
 
     }
 
-    public Requete(double id, String query, String username) {
+    public Requete(String id, String query, String username) {
         this.id = id;
         this.query = query;
         this.username = username;
     }
 
-    public double getId() {
+    public String getId() {
         return id;
     }
 

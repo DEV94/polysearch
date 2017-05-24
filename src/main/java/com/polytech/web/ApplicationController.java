@@ -4,8 +4,10 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.polytech.business.CommunauteService;
+import com.polytech.business.RechercheService;
 import com.polytech.business.SignInService;
 import com.polytech.models.*;
+import com.polytech.repository.RequetMongoRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +44,8 @@ public class ApplicationController {
     @Autowired
     private CommunauteService communauteService;
 
+    @Autowired
+    private RechercheService rechercheService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() throws UnsupportedEncodingException {
@@ -189,7 +193,6 @@ public class ApplicationController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String search(Requete requete, Principal principal, Model model){
-
         //Elements resultats = new Elements();
 
         /*String google = "http://www.google.com/search?q=";
@@ -232,6 +235,8 @@ public class ApplicationController {
             System.out.println(resultats2.size());
             //resultats.addAll(resultats);
             resultats.addAll(resultats2);*/
+            requete.setUsername(principal.getName());
+            rechercheService.save(requete);
             FunnyCrawler obj = new FunnyCrawler();
             Set<Result> result = obj.getDataFromGoogle(requete.getQuery());
             for(Result temp : result){

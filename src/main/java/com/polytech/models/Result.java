@@ -1,17 +1,23 @@
 package com.polytech.models;
 
+import org.springframework.data.annotation.Id;
+
 /**
  * Created by E.Marouane on 20/05/2017.
  */
 public class Result {
 
-    private double id;
+    @Id
+    private String id;
+
     private String title;
+
     private String uri;
+
     private double rating;
 
 
-    public Result(double id, String title, String uri) {
+    public Result(String id, String title, String uri) {
         this.id = id;
         this.title = title;
         this.uri = uri;
@@ -33,11 +39,11 @@ public class Result {
         this.uri = uri;
     }
 
-    public double getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(double id) {
+    public void setId(String id) {
         this.id = id;
     }
 

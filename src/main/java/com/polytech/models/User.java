@@ -15,6 +15,7 @@ import javax.persistence.Table;
 public class User {
 
     @Id
+    @org.springframework.data.annotation.Id
     @Column(name = "username")
     private String username;
 

@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
@@ -14,11 +15,13 @@ import javax.sql.DataSource;
 /**
  * Created by dev on 3/13/17.
  */
+
 @Configuration
 @PropertySource("classpath:application.properties")
 @ComponentScan(basePackages = "com.polytech.web, com.polytech.repository, com.polytech.business")
 @Import(SecurityConfig.class)
 @EnableJpaRepositories(basePackages = "com.polytech.repository")
+@EnableMongoRepositories(basePackages = "com.polytech.repository")
 @EntityScan(basePackages = "com.polytech.models")
 public class ApplicationConfig {
 

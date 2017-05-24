@@ -1,8 +1,11 @@
 package com.polytech.models;
 
+import org.springframework.data.annotation.*;
+
 import javax.persistence.*;
-import java.sql.Date;
-import java.util.List;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import java.util.*;
 
 /**
  * Created by E.Marouane on 02/05/2017.
@@ -13,6 +16,7 @@ import java.util.List;
 public class Communaute {
 
     @Id
+    @org.springframework.data.annotation.Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
@@ -28,14 +32,19 @@ public class Communaute {
 
     private Date dateCreation;
 
+    @Transient
     private List<User> personnes;
 
     public Communaute() {
+        personnes = new ArrayList<>();
+        dateCreation = new GregorianCalendar().getTime();
     }
 
     public Communaute(String nom, String responsable, String description) {
         this.nom = nom;
         this.description = description;
+        personnes = new ArrayList<>();
+        dateCreation = new GregorianCalendar().getTime();
     }
 
 

@@ -91,10 +91,10 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="index.html">Accueil</a></li>
+                <li><a href="/">Accueil</a></li>
                 <li><a href="creer.html">Créer Communauté</a></li>
                 <li><a href="#contact">Rejoindre Communauté</a></li>
-                <li><a href="gerer.html">Gérer Communauté</a></li>
+                <li class="active"><a href="gerer.html">Gérer Communauté</a></li>
                 <li><a href="#contact">Quitter Communauté</a></li>
             </ul>
         </div><!--/.nav-collapse -->
@@ -123,7 +123,7 @@
 
 <template id="product-list">
     <table class="table">
-        <thead>
+        <thead style="background-color: #b4b4b3">
         <tr>
             <th>Nom</th>
             <th>Description</th>
@@ -134,20 +134,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="product in products | filterBy searchKey in 'name'" th:each="communaute: ${communautes}">
-            <td>
-                <a v-link="{name: 'product', params: {product_id: product.id}}" th:value="${communaute.getTitle()}"></a>
-            </td>
-            <td th:value="${communaute.getDescription()}"></td>
-            <td th:value="${communaute.getResponsable()}">
-                <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
-            </td>
-            <td th:value="${communaute.getPersonnes().size()}">
-                <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
-            </td>
-            <td th:value="${communaute.getDateCreation()}">
-                <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
-            </td>
+        <!--v-for="product in products | filterBy searchKey in 'name'"-->
+        <!--v-link="{name: 'product', params: {product_id: product.id}}"-->
+        <tr  th:each="communaute: ${resultats}">
+            <td th:text="${communaute.getNom()}"></td>
+            <td th:text="${communaute.getDescription()}"></td>
+            <td th:text="${communaute.getResponsable()}"></td>
+            <td th:text="${communaute.getPersonnes().size()}"></td>
+            <td th:text="${communaute.getDateCreation()}"></td>
             <td>
                 <a class="btn btn-warning btn-xs" v-link="{name: 'product-edit', params: {product_id: product.id}}">Edit</a>
                 <a class="btn btn-danger btn-xs" v-link="{name: 'product-delete', params: {product_id: product.id}}">Delete</a>
