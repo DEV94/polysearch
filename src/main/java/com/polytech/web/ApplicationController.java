@@ -27,6 +27,7 @@ import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -180,8 +181,9 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/gerer", method = RequestMethod.GET)
-    public String gerer(){
-
+    public String gerer(Model model){
+        List<Communaute> communautes = communauteService.selectAll();
+        model.addAttribute("resultats", communautes);
         return "gerer";
     }
 
@@ -245,6 +247,13 @@ public class ApplicationController {
     }
 
 
+    @RequestMapping(value = "/rate", method = RequestMethod.POST)
+    public String rate(Requete requete, Principal principal, Model model){
+
+
+
+        return "index";
+    }
 
 
 }

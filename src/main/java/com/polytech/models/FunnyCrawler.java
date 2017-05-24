@@ -60,6 +60,7 @@ public class FunnyCrawler {
 
             // get all links
             Elements links = doc.select("a[href]");
+            int id = 0;
             for (Element link : links) {
                 String url = link.absUrl("href"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".
                 //url = URLDecoder.decode(url.substring(url.indexOf('=') + 1, url.indexOf('&')), "UTF-8");
@@ -83,7 +84,8 @@ public class FunnyCrawler {
                             String url2 = link.absUrl("href"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".
                             url2 = URLDecoder.decode(url2.substring(url2.indexOf('=') + 1, url2.indexOf('&')), "UTF-8");
                             link.setBaseUri(url2);
-                            Result res = new Result(link.text(), url2);
+                            id++;
+                            Result res = new Result(id, link.text(), url2);
                             result.add(res);
                         }
                     }

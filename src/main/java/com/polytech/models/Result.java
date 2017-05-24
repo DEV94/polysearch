@@ -5,11 +5,14 @@ package com.polytech.models;
  */
 public class Result {
 
+    private double id;
     private String title;
     private String uri;
+    private double rating;
 
 
-    public Result(String title, String uri) {
+    public Result(double id, String title, String uri) {
+        this.id = id;
         this.title = title;
         this.uri = uri;
     }
@@ -28,5 +31,21 @@ public class Result {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public double getId() {
+        return id;
+    }
+
+    public void setId(double id) {
+        this.id = id;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

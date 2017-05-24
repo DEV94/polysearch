@@ -5,6 +5,8 @@ import com.polytech.repository.CommunauteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Created by E.Marouane on 02/05/2017.
  */
@@ -18,5 +20,7 @@ public class CommunauteService {
     public void save(Communaute communaute){
         communauteRepository.save(communaute);
     }
+
+    public List<Communaute> selectAll(){ return communauteRepository.findAll(); }
 
 }

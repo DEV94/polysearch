@@ -1,6 +1,8 @@
 package com.polytech.models;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.util.List;
 
 /**
  * Created by E.Marouane on 02/05/2017.
@@ -23,6 +25,10 @@ public class Communaute {
 
     @Column(name = "description")
     private String description;
+
+    private Date dateCreation;
+
+    private List<User> personnes;
 
     public Communaute() {
     }
@@ -59,5 +65,21 @@ public class Communaute {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<User> getPersonnes() {
+        return personnes;
+    }
+
+    public void setPersonnes(List<User> personnes) {
+        this.personnes = personnes;
+    }
+
+    public Date getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(Date dateCreation) {
+        this.dateCreation = dateCreation;
     }
 }

@@ -113,11 +113,8 @@
 
 <div class="container">
     <header class="page-header">
-        <div class="branding">
-            <img src="https://vuejs.org/images/logo.png" alt="Logo" title="Home page" class="logo"/>
             <h2>PolySearch</h2>
             <h4>Gérer Communauté</h4>
-        </div>
     </header>
     <main id="app">
         <router-view></router-view>
@@ -125,18 +122,6 @@
 </div>
 
 <template id="product-list">
-    <div class="actions">
-        <a class="btn btn-default" v-link="{path: '/add-product'}">
-            <span class="glyphicon glyphicon-plus"></span>
-            Add product
-        </a>
-    </div>
-    <div class="filters row">
-        <div class="form-group col-sm-3">
-            <label for="search-element">Nom de Communauté</label>
-            <input v-model="searchKey" class="form-control" id="search-element" requred="true"/>
-        </div>
-    </div>
     <table class="table">
         <thead>
         <tr>
@@ -149,21 +134,18 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="product in products | filterBy searchKey in 'name'">
+        <tr v-for="product in products | filterBy searchKey in 'name'" th:each="communaute: ${communautes}">
             <td>
-                <a v-link="{name: 'product', params: {product_id: product.id}}">{{ product.name }}</a>
+                <a v-link="{name: 'product', params: {product_id: product.id}}" th:value="${communaute.getTitle()}"></a>
             </td>
-            <td>{{ product.description }}</td>
-            <td>
-                {{ product.price }}
+            <td th:value="${communaute.getDescription()}"></td>
+            <td th:value="${communaute.getResponsable()}">
                 <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
             </td>
-            <td>
-                {{ product.price }}
+            <td th:value="${communaute.getPersonnes().size()}">
                 <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
             </td>
-            <td>
-                {{ product.price }}
+            <td th:value="${communaute.getDateCreation()}">
                 <span class="glyphicon glyphicon-euro" aria-hidden="true"></span>
             </td>
             <td>
