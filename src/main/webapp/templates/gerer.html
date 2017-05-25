@@ -143,8 +143,9 @@
             <td th:text="${communaute.getPersonnes().size()}"></td>
             <td th:text="${communaute.getDateCreation()}"></td>
             <td>
-                <a class="btn btn-warning btn-xs" v-link="{name: 'product-edit', params: {product_id: product.id}}">Edit</a>
-                <a class="btn btn-danger btn-xs" v-link="{name: 'product-delete', params: {product_id: product.id}}">Delete</a>
+                <form th:action="@{/Update}" method="POST">
+                    <button class="btn btn-warning btn-xs" type="submit">Supprimer/Modifier</button>
+                </form>
             </td>
         </tr>
         </tbody>

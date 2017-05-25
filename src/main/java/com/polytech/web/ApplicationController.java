@@ -257,7 +257,7 @@ public class ApplicationController {
 
 
 
-
+//
     @RequestMapping(value = "/deleteCommunaute/{id}")
     public String deleteCommunaute(@PathVariable("id") String id, Principal principal){
         communauteService.delete(id);
@@ -273,6 +273,11 @@ public class ApplicationController {
         communauteService.save(communaute);
         return "/deleteOrUpdateCommunaute";
     }
-
 //
+@RequestMapping(value = "/Update", method = RequestMethod.POST)
+public String Update(){
+      return  "redirect:/deleteOrUpdateCommunaute";
+}
+
+
 }
