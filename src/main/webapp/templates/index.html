@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <meta name="description" content=""/>
     <meta name="author" content=""/>
-    <title>Starter Template for Bootstrap</title>
+    <title>PolySearch</title>
 
     <!-- Bootstrap core CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
@@ -100,6 +100,15 @@
         }
 
 
+        .link{
+            background: none;
+            border: none;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+
     </style>
 
     <script>
@@ -135,11 +144,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">PolySearch</a>
+            <a class="navbar-brand" href="/">PolySearch</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="index.html">Accueil</a></li>
+                <li class="active"><a href="/">Accueil</a></li>
                 <li><a href="creer.html">Créer Communauté</a></li>
                 <li><a href="rejoindre.html">Rejoindre Communauté</a></li>
                 <li><a href="gerer.html">Gérer Communauté</a></li>
@@ -158,86 +167,51 @@
 <div class="container">
 
     <div class="row">
-        <div>
-            <h2 align="center">PolySearch</h2>
-
-            <div ng-app="Test">
-
-                <div ng-app="Test">
-                    <div > <!--  ng-app="Test" -->
-
-                        <div class="form-group move-down" style="width:200px;">
-                            <form th:action="@{/search}" method="POST">
-                                <input type="text" name="query" id="tags" style="width: 500px; left: 500px;;" />
-                                <button type="submit"
-                                        style="position: absolute; left: -9999px; width: 1px; height: 1px;"
-                                        tabindex="-1">Search</button>
-                            </form>
+        <div >
+            <div align="center">
+                <h2 align="center">PolySearch</h2>
+                <div ng-app="Test" style="width:500px;" align="center">
+                    <div ng-app="Test">
+                        <div >
+                            <div class="form-group move-down">
+                                <form th:action="@{/search}" method="GET">
+                                    <input type="text" name="query" id="tags" style="width: 500px;"/>
+                                    <button type="submit" style="margin-top: 10px;">Search</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div><br/>
-            <!--
-            Copyright 2016 Google Inc. All Rights Reserved.
-            Use of this source code is governed by an MIT-style license that can be foundin the LICENSE file at http://material.angularjs.org/HEAD/license.
-            -->
-
-            <!--<form th:action="@{/search}" method="POST" align="center">
-                <input type="text" name="query2" />
-                <button type="submit" value="->">Search</button>
-            </form>
-
-            <div ng-controller="DemoCtrl as ctrl" layout="column" ng-cloak="" class="autocompletedemoCustomTemplate" ng-app="MyApp">
-                <md-content layout-padding="" layout="column">
-                    <form th:action="@{/search}" method="POST" >
-                        <md-autocomplete name="query" ng-disabled="ctrl.isDisabled" md-no-cache="ctrl.noCache" md-selected-item="ctrl.selectedItem" md-search-text-change="ctrl.searchTextChange(ctrl.searchText)" md-search-text="ctrl.searchText" md-selected-item-change="ctrl.selectedItemChange(item)" md-items="item in ctrl.querySearch(ctrl.searchText)" md-item-text="item.name" md-min-length="0" placeholder="Pick an Angular repository" md-menu-class="autocomplete-custom-template">
-                            <md-item-template>
-                                <span class="item-title">
-                                    <md-icon md-svg-icon="img/icons/octicon-repo.svg"></md-icon>
-                                    <span> {{item.name}} </span>
-                                </span>
-                                <span class="item-metadata">
-                                    <span>
-                                        <strong>{{item.watchers}}</strong> watchers
-                                    </span>
-                                    <span>
-                                        <strong>{{item.forks}}</strong> forks
-                                    </span>
-                                </span>
-                            </md-item-template>
-                        </md-autocomplete>
-                        <input type="submit"
-                               style="position: absolute; left: -9999px; width: 1px; height: 1px;"
-                               tabindex="-1" />
-                    </form>
-                </md-content>
-            </div>-->
-
-
+                </div><br/>
+            </div>
             <div class="row carousel-row" th:each="result: ${resultats}">
                 <div>
                     <div>
-                        <input name="id" th:value="${result.getId()}" hidden="false"/>
-                        <span th:text="${result.getTitle()}"><b></b></span><br/>
-                        <input name="title" th:value="${result.getTitle()}" hidden="false"/>
-                        <span><a th:href="${result.getUri()}" th:text="${result.getUri()}"></a></span>
-                        <input name="uri" th:value="${result.getUri()}" hidden="false"/><br/>
-
+                        <form th:action="@{/click}" method="post">
+                            <span th:text="${result.getTitle()}"><b></b></span><br/>
+                            <input type="hidden" name="id" th:value="${result.getId()}"/>
+                            <input type="hidden" name="title" th:value="${result.getTitle()}"/>
+                            <input type="hidden" name="uri" th:value="${result.getUri()}"/>
+                            <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
+                            <input type="submit" th:value="${result.getUri()}" class="link"/>
+                        </form>
                         <div class="acidjs-rating-stars">
                             <form th:action="@{/rate}" method="POST">
-                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-0'}" value="5" /><label th:for="${'group-' + result.getId() + '-0'}" ></label><!--
-        -->                     <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-1'}" value="4" /><label th:for="${'group-' + result.getId() + '-1'}" ></label><!--
-        -->                     <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-2'}" value="3" /><label th:for="${'group-' + result.getId() + '-2'}" ></label><!--
-        -->                     <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-3'}" value="2" /><label th:for="${'group-' + result.getId() + '-3'}" ></label><!--
-        -->                     <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-4'}" value="1" /><label th:for="${'group-' + result.getId() + '-4'}" ></label>
+                                <input type="hidden" name="id" th:value="${result.getId()}"/>
+                                <input type="hidden" name="title" th:value="${result.getTitle()}"/>
+                                <input type="hidden" name="uri" th:value="${result.getUri()}"/>
+                                <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
+
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-0'}" value="5" /><label th:for="${'group-' + result.getId() + '-0'}" ></label>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-1'}" value="4" /><label th:for="${'group-' + result.getId() + '-1'}" ></label>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-2'}" value="3" /><label th:for="${'group-' + result.getId() + '-2'}" ></label>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-3'}" value="2" /><label th:for="${'group-' + result.getId() + '-3'}" ></label>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-4'}" value="1" /><label th:for="${'group-' + result.getId() + '-4'}" ></label>
                             </form>
                         </div>
 
                     </div>
                 </div><br/>
             </div>
-
-
         </div>
     </div>
 
@@ -255,11 +229,11 @@
 <script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js'></script>
 <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/t-114/svg-assets-cache.js'></script>
 <script src='https://cdn.gitcdn.link/cdn/angular/bower-material/v1.1.4/angular-material.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.14/angular.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
 
 
-    <script src="/resources/js/index.js"></script>
+<script src="/resources/js/index.js"></script>
 </body>
 </html>

@@ -16,6 +16,10 @@ public class Result {
 
     private double rating;
 
+    private String requete;
+
+    public Result() {
+    }
 
     public Result(String id, String title, String uri) {
         this.id = id;
@@ -53,5 +57,13 @@ public class Result {
 
     public void setRating(double rating) {
         this.rating = rating;
+    }
+
+    public String getRequete() {
+        return requete;
+    }
+
+    public void setRequete(String requete) {
+        this.requete = requete;
     }
 }

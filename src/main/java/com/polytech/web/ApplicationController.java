@@ -6,7 +6,6 @@ import com.mashape.unirest.http.Unirest;
 import com.polytech.business.*;
 import com.polytech.models.*;
 import com.polytech.repository.RequetMongoRepository;
-import com.polytech.repository.UserMongoRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.*;
 import java.net.*;
@@ -52,112 +52,6 @@ public class ApplicationController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() throws UnsupportedEncodingException {
-
-
-
-        /*try {
-            HttpResponse<JsonNode> response = Unirest.get("https://faroo-faroo-web-search.p.mashape.com/api?q=google&start=11")
-                .header("X-Mashape-Key", "EjT6SCFnnZmshYDFS0vCgw9gKCGMp1qccC2jsnJP9c4hUzjpnv")
-                .header("Accept", "application/json")
-                .asJson();*/
-
-            /*HttpResponse<JsonNode> response = Unirest.get("https://api.duckduckgo.com/?q=Test&format=json")
-                    .header("X-Mashape-Key", "EjT6SCFnnZmshYDFS0vCgw9gKCGMp1qccC2jsnJP9c4hUzjpnv")
-                    .header("Accept", "application/json")
-                    .asJson();*/
-
-            /*JSONObject myObj = response.getBody().getObject();
-            System.out.println(myObj);
-            JSONArray arr = myObj.getJSONArray("results");
-            System.out.println(arr.length());
-            for(int i=0; i<arr.length(); i++){
-                JSONObject o = arr.getJSONObject(i);
-                System.out.println(o.get("title"));
-                //System.out.println(o.get("title"));
-            }*/
-
-            // extract fields from the object
-            //String msg = myObj.getString("error_message");
-            //JSONArray results = myObj.getJSONArray(msg);
-
-
-        /*}catch(Exception e){
-            e.printStackTrace();
-        }
-        System.out.println("IN");*/
-        /*final String accountKey = "9fe8b6df90574d3a90b1b83d824c556c";
-        final String bingUrlPattern = "https://api.cognitive.microsoft.com/bing/v5.0/search?Query=%%27%s%%27&$format=JSON";
-
-
-        try {
-            final String query = URLEncoder.encode("'what      is omonoia'", Charset.defaultCharset().name());
-            final String bingUrl = String.format(bingUrlPattern, query);
-
-            final String accountKeyEnc = Base64.getEncoder().encodeToString((accountKey + ":" + accountKey).getBytes());
-
-            final URL url = new URL(bingUrl);
-            final URLConnection connection = url.openConnection();
-            connection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
-            System.out.println("IN2");
-            try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                String inputLine;
-                System.out.println("IN3 : " + in);
-                final StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                    System.out.println(response);
-                }
-                final JSONObject json = new JSONObject(response.toString());
-                final JSONObject d = json.getJSONObject("d");
-                final JSONArray results = d.getJSONArray("results");
-                final int resultsLength = results.length();
-                for (int i = 0; i < resultsLength; i++) {
-                    final JSONObject aResult = results.getJSONObject(i);
-                    System.out.println(aResult.get("Url"));
-                }
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }*/
-
-        //String accountKey = "773f65ede24a47268e23bb8243914b90";
-        //byte[] accountKeyBytes = Base64.encodeBase64(accountKey.getBytes());
-        //String accountKeyEnc = new String(accountKeyBytes);
-
-        /*String accountKey = "b050424695f744cba2f5561284ae41b0";
-        String accountKeyEnc = new sun.misc.BASE64Encoder().encode (accountKey.getBytes());
-
-        String query="eagle";
-
-        String bingURL = "https://api.cognitive.microsoft.com/bing/v5.0/search?q=sailing+lessons+seattle&mkt=en-us"+URLEncoder.encode(query, "UTF-8")+"%27&$format=json";
-
-        JSONObject result = null;
-
-        try {
-            URL url = new URL(bingURL);
-            //url.append(URLEncoder.encode(query, "UTF-8"));
-            URLConnection urlConnection = url.openConnection();
-            urlConnection.setRequestProperty("Authorization", "Basic " + accountKeyEnc);
-            InputStream is = urlConnection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
-
-            int numCharsRead;
-            char[] charArray = new char[1024];
-            StringBuilder sb = new StringBuilder();
-            while ((numCharsRead = isr.read(charArray)) > 0) {
-                sb.append(charArray, 0, numCharsRead);
-            }
-            result = new JSONObject(sb.toString());
-            System.out.println(result);
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
-
         return "index";
     }
 
@@ -194,27 +88,28 @@ public class ApplicationController {
         return "gerer";
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
     public String search(Requete requete, Principal principal, Model model){
         requete.setUsername(principal.getName());
-        rechercheService.save(requete);
-        FunnyCrawler obj = new FunnyCrawler();
-        Set<Result> result = obj.getDataFromGoogle(requete.getQuery());
-        for(Result temp : result){
-            System.out.println(temp.getTitle() + " | " + temp.getUri());
+        rechercheService.saveRequete(requete);
+        Crawler obj = new Crawler();
+        List<Result> results = obj.getDataFromGoogle(requete.getQuery().replace(" ", "+"));
+        for(Result temp : results){
+            temp.setRequete(requete.getId());
         }
-        System.out.println(result.size());
-        model.addAttribute("resultats", result);
+        model.addAttribute("resultats", results);
         return "index";
     }
 
-
     @RequestMapping(value = "/rate", method = RequestMethod.POST)
     public String rate(Requete requete, Principal principal, Model model){
-
-
-
         return "index";
+    }
+
+    @RequestMapping(value = "/click", method = RequestMethod.POST)
+    public ModelAndView click(Result result, Principal principal, Model model){
+        rechercheService.saveResultat(result);
+        return new ModelAndView("redirect:" + result.getUri());
     }
 
     @RequestMapping(value = "/rejoindre/{id}")
