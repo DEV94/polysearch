@@ -34,21 +34,9 @@ public class CommunauteService {
         return communauteMongoRepository.findCommunauteBy(idCommunaute);
     }
 
-    //
-    public Communaute getCommunauteByResponsable(String responsable){
-
-        return communauteMongoRepository.findCommunauteByResponsable(responsable);
+    public Communaute getCommunauteByResponsable(String idReponsable){
+        return communauteMongoRepository.findCommunauteByresponsable(idReponsable);
     }
 
-    public void delete(String idCommunaute){
-        communauteMongoRepository.delete(idCommunaute);
-    }
-
-    public void update(Communaute communaute)
-    {
-        communauteMongoRepository.save(communaute);
-    }
-
-    //
 
 }

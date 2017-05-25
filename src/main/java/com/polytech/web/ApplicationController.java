@@ -3,12 +3,10 @@ package com.polytech.web;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-import com.polytech.business.AdhesionService;
-import com.polytech.business.CommunauteService;
-import com.polytech.business.RechercheService;
-import com.polytech.business.SignInService;
+import com.polytech.business.*;
 import com.polytech.models.*;
 import com.polytech.repository.RequetMongoRepository;
+import com.polytech.repository.UserMongoRepository;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,6 +46,9 @@ public class ApplicationController {
 
     @Autowired
     private RechercheService rechercheService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() throws UnsupportedEncodingException {
@@ -225,59 +226,51 @@ public class ApplicationController {
     @RequestMapping(value = "/rejoindre")
     public String rejoindre(Model model, Principal principal){
         List<Communaute> communautes = new ArrayList<>();
-        Adhesion adhesion = adhesionService.findAdhesion(principal.getName());
-        if(adhesion != null){
-            communautes.add(communauteService.getCommunauteById(adhesion.getIdCommunaute()));
-            model.addAttribute("resultats2", communautes);
+        User user = userService.findUserByUsername(principal.getName());
+        if(user.getIdCommunaute()=="") {
+            Adhesion adhesion = adhesionService.findAdhesionByUser(principal.getName());
+            if (adhesion != null) {
+                communautes.add(communauteService.getCommunauteById(adhesion.getIdCommunaute()));
+                model.addAttribute("resultats2", communautes);
+            } else {
+                communautes = communauteService.selectAll();
+                model.addAttribute("resultats", communautes);
+            }
         }
-        else{
-            communautes = communauteService.selectAll();
-            model.addAttribute("resultats", communautes);
-        }
-
-
         return "rejoindre";
     }
 
     @RequestMapping(value = "/deleteAdhesion/{id}")
     public String retirerAdhesion(@PathVariable("id") String id, Principal principal){
-        String idAdhesion = adhesionService.findAdhesion(principal.getName()).getId();
+        String idAdhesion = adhesionService.findAdhesionByUser(principal.getName()).getId();
         adhesionService.delete(idAdhesion);
         return "redirect:/rejoindre";
     }
 
-//
-
-    @RequestMapping(value = "/deleteOrUpdateCommunaute")
-    public String deleteOrUpdateCommunaute(Model model, Principal principal){
-       Communaute communaute=communauteService.getCommunauteByResponsable(principal.getName());
-       model.addAttribute("communaute",communaute);
-        return "deleteOrUpdateCommunaute";
+    @RequestMapping(value = "/gererDemandes")
+    public String gererDemandes(Model model, Principal principal){
+        String idCommunaute = communauteService.getCommunauteByResponsable(principal.getName()).getId();
+        List<Adhesion> adhesions = adhesionService.findAdhesionByCommunaute(idCommunaute);
+        model.addAttribute("demandes", adhesions);
+        return "gererDemandes";
     }
 
-
-
-//
-    @RequestMapping(value = "/deleteCommunaute/{id}")
-    public String deleteCommunaute(@PathVariable("id") String id, Principal principal){
-        communauteService.delete(id);
-        return "redirect:/";
+    @RequestMapping(value = "/approuver/{id}")
+    public String approuverDamande(@PathVariable("id") String id, Principal principal){
+        Communaute communaute = communauteService.getCommunauteByResponsable(principal.getName());
+        Adhesion adhesion = adhesionService.findAdhesionByID(id);
+        User user = userService.findUserByUsername(adhesion.getIdUtilisateur());
+        user.setIdCommunaute(communaute.getId());
+        userService.save(user);
+        adhesionService.delete(adhesion.getId());
+        return "redirect:/gererDemandes";
     }
 
-    @RequestMapping(value = "/UpdateCommunaute", method = RequestMethod.POST)
-    public String UpdateCommunaute(Communaute communaute, Principal principal){
-        communaute.setResponsableID(principal.getName());
-        System.out.println(communaute.getNom());
-        System.out.println(communaute.getId());
-        System.out.println(communaute.getDescription());
-        communauteService.save(communaute);
-        return "/deleteOrUpdateCommunaute";
+    @RequestMapping(value = "/desapprouver/{id}")
+    public String desapprouverDamande(@PathVariable("id") String id, Principal principal){
+        Adhesion adhesion = adhesionService.findAdhesionByID(id);
+        adhesionService.delete(adhesion.getId());
+        return "redirect:/gererDemandes";
     }
-//
-@RequestMapping(value = "/Update", method = RequestMethod.POST)
-public String Update(){
-      return  "redirect:/deleteOrUpdateCommunaute";
-}
-
 
 }

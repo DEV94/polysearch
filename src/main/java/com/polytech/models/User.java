@@ -2,10 +2,7 @@ package com.polytech.models;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by dev on 4/11/17.
@@ -21,6 +18,9 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @Transient
+    private String idCommunaute;
 
     @Column(name = "enabled")
     private int enable;
@@ -65,4 +65,11 @@ public class User {
     }
 
 
+    public String getIdCommunaute() {
+        return idCommunaute;
+    }
+
+    public void setIdCommunaute(String idCommunaute) {
+        this.idCommunaute = idCommunaute;
+    }
 }

@@ -31,8 +31,16 @@ public class AdhesionService {
         return adhesionMongoRepository.findAll();
     }
 
-    public Adhesion findAdhesion(String idUtilisateur){
-        return adhesionMongoRepository.findAdhesionBy(idUtilisateur);
+    public Adhesion findAdhesionByUser(String idUtilisateur){
+        return adhesionMongoRepository.findAdhesionByidUtilisateur(idUtilisateur);
+    }
+
+    public Adhesion findAdhesionByID(String id){
+        return adhesionMongoRepository.findAdhesionByid(id);
+    }
+
+    public List<Adhesion> findAdhesionByCommunaute(String idCommunaute){
+        return adhesionMongoRepository.findAdhesionByidCommunaute(idCommunaute);
     }
 
     public void delete(String idAdhesion){
