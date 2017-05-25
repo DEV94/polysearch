@@ -246,4 +246,33 @@ public class ApplicationController {
         return "redirect:/rejoindre";
     }
 
+//
+
+    @RequestMapping(value = "/deleteOrUpdateCommunaute")
+    public String deleteOrUpdateCommunaute(Model model, Principal principal){
+       Communaute communaute=communauteService.getCommunauteByResponsable(principal.getName());
+       model.addAttribute("communaute",communaute);
+        return "deleteOrUpdateCommunaute";
+    }
+
+
+
+
+    @RequestMapping(value = "/deleteCommunaute/{id}")
+    public String deleteCommunaute(@PathVariable("id") String id, Principal principal){
+        communauteService.delete(id);
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/UpdateCommunaute", method = RequestMethod.POST)
+    public String UpdateCommunaute(Communaute communaute, Principal principal){
+        communaute.setResponsableID(principal.getName());
+        System.out.println(communaute.getNom());
+        System.out.println(communaute.getId());
+        System.out.println(communaute.getDescription());
+        communauteService.save(communaute);
+        return "/deleteOrUpdateCommunaute";
+    }
+
+//
 }

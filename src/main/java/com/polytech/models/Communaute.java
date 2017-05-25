@@ -52,6 +52,7 @@ public class Communaute {
         return id;
     }
 
+
     public String getNom() {
         return nom;
     }
@@ -90,5 +91,9 @@ public class Communaute {
 
     public void setDateCreation(Date dateCreation) {
         this.dateCreation = dateCreation;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
