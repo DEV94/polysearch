@@ -1,19 +1,7 @@
 package com.polytech.web;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
 import com.polytech.business.*;
 import com.polytech.models.*;
-import com.polytech.repository.RequetMongoRepository;
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,11 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.*;
-import java.net.*;
-import java.nio.charset.Charset;
+import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by dev on 3/15/17.
@@ -102,7 +89,8 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/rate", method = RequestMethod.POST)
-    public String rate(Requete requete, Principal principal, Model model){
+    public String rate(Result result, Principal principal, Model model){
+        System.out.println(result.getTitle());
         return "index";
     }
 
