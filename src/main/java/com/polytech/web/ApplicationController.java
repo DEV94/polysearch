@@ -122,7 +122,7 @@ public class ApplicationController {
     public String rejoindre(Model model, Principal principal){
         List<Communaute> communautes = new ArrayList<>();
         User user = userService.findUserByUsername(principal.getName());
-        if(user.getIdCommunaute()=="") {
+        if(user.getIdCommunaute()==null) {
             Adhesion adhesion = adhesionService.findAdhesionByUser(principal.getName());
             if (adhesion != null) {
                 communautes.add(communauteService.getCommunauteById(adhesion.getIdCommunaute()));
@@ -168,5 +168,39 @@ public class ApplicationController {
         adhesionService.delete(adhesion.getId());
         return "redirect:/gererDemandes";
     }
+
+
+    @RequestMapping(value = "/deleteOrUpdateCommunaute")
+    public String deleteOrUpdateCommunaute(Model model, Principal principal){
+        Communaute communaute=communauteService.getCommunauteByResponsable(principal.getName());
+        model.addAttribute("communaute",communaute);
+        return "deleteOrUpdateCommunaute";
+    }
+
+
+
+    //
+    @RequestMapping(value = "/deleteCommunaute/{id}")
+    public String deleteCommunaute(@PathVariable("id") String id, Principal principal){
+        communauteService.delete(id);
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/UpdateCommunaute", method = RequestMethod.POST)
+    public String UpdateCommunaute(Communaute communaute, Principal principal){
+        communaute.setResponsableID(principal.getName());
+        System.out.println(communaute.getNom());
+        System.out.println(communaute.getId());
+        System.out.println(communaute.getDescription());
+        communauteService.save(communaute);
+        return "/deleteOrUpdateCommunaute";
+    }
+    //
+    @RequestMapping(value = "/Update", method = RequestMethod.POST)
+    public String Update(){
+        return  "redirect:/deleteOrUpdateCommunaute";
+    }
+
+
 
 }

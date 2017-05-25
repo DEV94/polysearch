@@ -10,6 +10,8 @@ public interface CommunauteMongoRepository extends MongoRepository<Communaute, S
 
     public Communaute findCommunauteBy(String id);
 
-    public Communaute findCommunauteByresponsable(String responsable);
+
+    public Communaute findCommunauteByResponsable(String responsable);
+
 
 }
