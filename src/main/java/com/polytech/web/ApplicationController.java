@@ -161,6 +161,7 @@ public class ApplicationController {
         return "redirect:/gererDemandes";
     }
 
+
     @RequestMapping(value = "/desapprouver/{id}")
     public String desapprouverDamande(@PathVariable("id") String id, Principal principal){
         Adhesion adhesion = adhesionService.findAdhesionByID(id);
