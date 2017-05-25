@@ -121,6 +121,7 @@ public class ApplicationController {
     @RequestMapping(value = "/rejoindre")
     public String rejoindre(Model model, Principal principal){
         List<Communaute> communautes = new ArrayList<>();
+        
         User user = userService.findUserByUsername(principal.getName());
         if(user.getIdCommunaute()==null) {
             Adhesion adhesion = adhesionService.findAdhesionByUser(principal.getName());
