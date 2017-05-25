@@ -3,6 +3,7 @@ package com.polytech.web;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
+import com.polytech.business.AdhesionService;
 import com.polytech.business.CommunauteService;
 import com.polytech.business.RechercheService;
 import com.polytech.business.SignInService;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -27,10 +29,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by dev on 3/15/17.
@@ -43,6 +42,9 @@ public class ApplicationController {
 
     @Autowired
     private CommunauteService communauteService;
+
+    @Autowired
+    private AdhesionService adhesionService;
 
     @Autowired
     private RechercheService rechercheService;
@@ -193,61 +195,15 @@ public class ApplicationController {
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String search(Requete requete, Principal principal, Model model){
-        //Elements resultats = new Elements();
-
-        /*String google = "http://www.google.com/search?q=";
-        String search = "stackoverflow";
-        String charset = "UTF-8";
-        String userAgent = "ExampleBot 1.0 (+http://example.com/bot)"; // Change this to your company's name and bot homepage!
-
-        //search = requete.getQuery();
-
-        System.out.println("# " + requete.getUsername() + " : " + requete.getQuery());
-
-        try {
-            Elements resultats = Jsoup.connect(google + URLEncoder.encode(search, charset)).userAgent(userAgent).get().select(".g>.r>a");
-            //Elements resultats2 = Jsoup.connect(google + URLEncoder.encode(requete.getQuery()+"&start=10", charset)).userAgent(userAgent).get().select(".g>.r>a");
-            System.out.println(resultats.size());
-            for (Element link : resultats) {
-                String title = link.text();
-                String url = link.absUrl("href"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".
-                url = URLDecoder.decode(url.substring(url.indexOf('=') + 1, url.indexOf('&')), "UTF-8");
-                link.setBaseUri(url);
-                if (!url.startsWith("http")) {
-                    continue; // Ads/news/etc.
-                }
-
-                System.out.println("Title: " + title);
-                System.out.println("URL: " + url);
-            }
-
-
-            /*for (Element link2 : resultats2) {
-                String title2 = link2.text();
-                String url2 = link2.absUrl("href"); // Google returns URLs in format "http://www.google.com/url?q=<url>&sa=U&ei=<someKey>".
-                url2 = URLDecoder.decode(url2.substring(url2.indexOf('=') + 1, url2.indexOf('&')), "UTF-8");
-                link2.setBaseUri(url2);
-                if (!url2.startsWith("http")) {
-                    continue; // Ads/news/etc.
-                }
-            }
-            System.out.println(resultats.size());
-            System.out.println(resultats2.size());
-            //resultats.addAll(resultats);
-            resultats.addAll(resultats2);*/
-            requete.setUsername(principal.getName());
-            rechercheService.save(requete);
-            FunnyCrawler obj = new FunnyCrawler();
-            Set<Result> result = obj.getDataFromGoogle(requete.getQuery());
-            for(Result temp : result){
-                System.out.println(temp.getTitle() + " | " + temp.getUri());
-            //System.out.println(temp.getUri());
-            }
-            System.out.println(result.size());
-            model.addAttribute("resultats", result);
-        /*}catch(Exception e){
-            e.printStackTrace();
-        }*/
+        requete.setUsername(principal.getName());
+        rechercheService.save(requete);
+        FunnyCrawler obj = new FunnyCrawler();
+        Set<Result> result = obj.getDataFromGoogle(requete.getQuery());
+        for(Result temp : result){
+            System.out.println(temp.getTitle() + " | " + temp.getUri());
+        }
+        System.out.println(result.size());
+        model.addAttribute("resultats", result);
         return "index";
     }
 
@@ -260,5 +216,34 @@ public class ApplicationController {
         return "index";
     }
 
+    @RequestMapping(value = "/rejoindre/{id}")
+    public String adherer(@PathVariable("id") String id, Principal principal){
+        adhesionService.save(new Adhesion(id, principal.getName()));
+        return "redirect:/rejoindre";
+    }
+
+    @RequestMapping(value = "/rejoindre")
+    public String rejoindre(Model model, Principal principal){
+        List<Communaute> communautes = new ArrayList<>();
+        Adhesion adhesion = adhesionService.findAdhesion(principal.getName());
+        if(adhesion != null){
+            communautes.add(communauteService.getCommunauteById(adhesion.getIdCommunaute()));
+            model.addAttribute("resultats2", communautes);
+        }
+        else{
+            communautes = communauteService.selectAll();
+            model.addAttribute("resultats", communautes);
+        }
+
+
+        return "rejoindre";
+    }
+
+    @RequestMapping(value = "/deleteAdhesion/{id}")
+    public String retirerAdhesion(@PathVariable("id") String id, Principal principal){
+        String idAdhesion = adhesionService.findAdhesion(principal.getName()).getId();
+        adhesionService.delete(idAdhesion);
+        return "redirect:/rejoindre";
+    }
 
 }

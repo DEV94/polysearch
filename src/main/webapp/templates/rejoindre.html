@@ -113,8 +113,8 @@
 
 <div class="container">
     <header class="page-header">
-            <h2>PolySearch</h2>
-            <h4>Gérer Communauté</h4>
+        <h2>PolySearch</h2>
+        <h4>Rejoindre Communauté</h4>
     </header>
     <main id="app">
         <router-view></router-view>
@@ -143,8 +143,17 @@
             <td th:text="${communaute.getPersonnes().size()}"></td>
             <td th:text="${communaute.getDateCreation()}"></td>
             <td>
-                <a class="btn btn-warning btn-xs" v-link="{name: 'product-edit', params: {product_id: product.id}}">Edit</a>
-                <a class="btn btn-danger btn-xs" v-link="{name: 'product-delete', params: {product_id: product.id}}">Delete</a>
+                <a class="btn btn-warning btn-xs" th:href="@{/rejoindre/{id}/(id=${communaute.getId()})}">Rejoindre</a>
+            </td>
+        </tr>
+        <tr  th:each="communaute: ${resultats2}">
+            <td th:text="${communaute.getNom()}"></td>
+            <td th:text="${communaute.getDescription()}"></td>
+            <td th:text="${communaute.getResponsable()}"></td>
+            <td th:text="${communaute.getPersonnes().size()}"></td>
+            <td th:text="${communaute.getDateCreation()}"></td>
+            <td>
+                <a class="btn btn-warning btn-xs" th:href="@{/deleteAdhesion/{id}/(id=${communaute.getId()})}">Retirer</a>
             </td>
         </tr>
         </tbody>

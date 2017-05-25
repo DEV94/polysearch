@@ -30,4 +30,8 @@ public class CommunauteService {
         return communauteMongoRepository.findAll();
     }
 
+    public Communaute getCommunauteById(String idCommunaute){
+        return communauteMongoRepository.findCommunauteBy(idCommunaute);
+    }
+
 }
