@@ -14,7 +14,7 @@ public class Result {
 
     private String uri;
 
-    private double rating;
+    private int rating;
 
     private String requete;
 
@@ -51,11 +51,11 @@ public class Result {
         this.id = id;
     }
 
-    public double getRating() {
+    public int getRating() {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(int rating) {
         this.rating = rating;
     }
 
