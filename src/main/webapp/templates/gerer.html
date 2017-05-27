@@ -98,7 +98,7 @@
                 </ul>
                 <ul class="nav navbar-nav" th:case="'RESPONSABLE'">
                     <li><a href="gerer.html">Gérer Communauté</a></li>
-                    <li><a href="gererDemandes.html">Demandes</a></li>
+                    <li><a href="gererDemandes.html" th:text="${'(' + nbDemandes + ') Demandes'}"></a></li>
                 </ul>
                 <li th:case="'MEMBRE'"><a href="#contact">Quitter Communauté</a></li>
 
