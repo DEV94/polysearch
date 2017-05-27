@@ -90,8 +90,7 @@ public class ApplicationController {
 
     @RequestMapping(value = "/rate", method = RequestMethod.POST)
     public String rate(Result result, Principal principal, Model model){
-        System.out.println(result.getTitle());
-        System.out.println(result.getRating());
+        rechercheService.saveResultat(result);
         return "index";
     }
 
