@@ -15,6 +15,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.Charset;
@@ -50,8 +54,26 @@ public class ApplicationController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private AuthorityService authorityService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index() throws UnsupportedEncodingException {
+    public String index(Model model, Principal principal) throws UnsupportedEncodingException {
+        String role = getRole(principal.getName());
+        System.out.println("Role INDEX : " +  role);
+        model.addAttribute("role", role);
+        if(role.equals("RESPONSABLE")){
+            Communaute communaute = communauteService.getCommunauteByResponsable(principal.getName());
+            List<Adhesion> adhesions = adhesionService.findAdhesionByCommunaute(communaute.getId());
+            model.addAttribute("nbDemandes", adhesions.size());
+        }
+        else {
+            if(role.equals("MEMBRE")){
+                User user = userService.findUserByUsername(principal.getName());
+                Communaute communaute = communauteService.getCommunauteById(user.getIdCommunaute());
+                model.addAttribute("communaute", communaute.getNom());
+            }
+        }
         return "index";
     }
 
@@ -67,24 +89,45 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/creer", method = RequestMethod.GET)
-    public String creer(){
+    public String creer(Principal principal, Model model){
+        String role = getRole(principal.getName());
+        model.addAttribute("role", role);
         return "creer";
     }
 
     @RequestMapping(value = "/creerCommunaute", method = RequestMethod.POST)
     public String creerCommunaute(Communaute communaute, Principal principal){
-        communaute.setResponsableID(principal.getName());
-        System.out.println(communaute.getNom());
-        System.out.println(communaute.getResponsable());
-        System.out.println(communaute.getDescription());
-        communauteService.save(communaute);
-        return "creer";
+        Communaute communaute1 = communauteService.getCommunauteByResponsable(principal.getName());
+        if(communaute1==null) {
+            communaute.setResponsableID(principal.getName());
+            System.out.println(communaute.getNom());
+            System.out.println(communaute.getResponsable());
+            System.out.println(communaute.getDescription());
+            communauteService.save(communaute);
+            Authority authority = new Authority(principal.getName(), "RESPONSABLE");
+            System.out.println(authority.getAuthority());
+            authorityService.save(authority);
+            for (Authority a : authorityService.selectAll()) {
+                System.out.println(a.getAuthority());
+            }
+        }
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/gerer", method = RequestMethod.GET)
-    public String gerer(Model model){
-        List<Communaute> communautes = communauteService.selectAll();
-        model.addAttribute("resultats", communautes);
+    public String gerer(Model model, Principal principal){
+        String role = getRole(principal.getName());
+        model.addAttribute("role", role);
+        if(role.equals("RESPONSABLE")){
+            Communaute communaute = communauteService.getCommunauteByResponsable(principal.getName());
+            List<Adhesion> adhesions = adhesionService.findAdhesionByCommunaute(communaute.getId());
+            model.addAttribute("nbDemandes", adhesions.size());
+        }
+        Communaute communaute=communauteService.getCommunauteByResponsable(principal.getName());
+        List<User> users=userService.findUserByidCommunaute(communaute.getId());
+        model.addAttribute("resultatsusers", users);
+        model.addAttribute("resultats", communaute);
+
         return "gerer";
     }
 
@@ -114,14 +157,17 @@ public class ApplicationController {
 
     @RequestMapping(value = "/rejoindre/{id}")
     public String adherer(@PathVariable("id") String id, Principal principal){
-        adhesionService.save(new Adhesion(id, principal.getName()));
+
+            adhesionService.save(new Adhesion(id, principal.getName()));
         return "redirect:/rejoindre";
     }
 
     @RequestMapping(value = "/rejoindre")
-    public String rejoindre(Model model, Principal principal){
+    public String rejoindre(Principal principal, Model model){
+        String role = getRole(principal.getName());
+        model.addAttribute("role", role);
         List<Communaute> communautes = new ArrayList<>();
-        
+
         User user = userService.findUserByUsername(principal.getName());
         if(user.getIdCommunaute()==null) {
             Adhesion adhesion = adhesionService.findAdhesionByUser(principal.getName());
@@ -144,7 +190,9 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/gererDemandes")
-    public String gererDemandes(Model model, Principal principal){
+    public String gererDemandes(Principal principal, Model model){
+        String role = getRole(principal.getName());
+        model.addAttribute("role", role);
         String idCommunaute = communauteService.getCommunauteByResponsable(principal.getName()).getId();
         List<Adhesion> adhesions = adhesionService.findAdhesionByCommunaute(idCommunaute);
         model.addAttribute("demandes", adhesions);
@@ -159,6 +207,8 @@ public class ApplicationController {
         user.setIdCommunaute(communaute.getId());
         userService.save(user);
         adhesionService.delete(adhesion.getId());
+        Authority authority = new Authority(user.getUsername(),"MEMBRE");
+        authorityService.save(authority);
         return "redirect:/gererDemandes";
     }
 
@@ -172,7 +222,9 @@ public class ApplicationController {
 
 
     @RequestMapping(value = "/deleteOrUpdateCommunaute")
-    public String deleteOrUpdateCommunaute(Model model, Principal principal){
+    public String deleteOrUpdateCommunaute(Principal principal, Model model){
+        String role = getRole(principal.getName());
+        model.addAttribute("role", role);
         Communaute communaute=communauteService.getCommunauteByResponsable(principal.getName());
         model.addAttribute("communaute",communaute);
         return "deleteOrUpdateCommunaute";
@@ -183,7 +235,24 @@ public class ApplicationController {
     //
     @RequestMapping(value = "/deleteCommunaute/{id}")
     public String deleteCommunaute(@PathVariable("id") String id, Principal principal){
+
+      List<User> users= userService.findUserByidCommunaute(id);
+        for (User user: users) {
+            user.setIdCommunaute(null);
+            userService.save(user);
+            Authority authority=new Authority();
+            authority.setAuthority("USER");
+            authority.setUsername(user.getUsername());
+            authorityService.save(authority);
+        }
+
         communauteService.delete(id);
+        Authority authority=new Authority();
+        authority.setAuthority("USER");
+        authority.setUsername(principal.getName());
+        authorityService.save(authority);
+
+
         return "redirect:/";
     }
 
@@ -194,7 +263,7 @@ public class ApplicationController {
         System.out.println(communaute.getId());
         System.out.println(communaute.getDescription());
         communauteService.save(communaute);
-        return "/deleteOrUpdateCommunaute";
+        return "redirect:/gerer";
     }
     //
     @RequestMapping(value = "/Update", method = RequestMethod.POST)
@@ -202,6 +271,39 @@ public class ApplicationController {
         return  "redirect:/deleteOrUpdateCommunaute";
     }
 
+    public String getRole(String username){
+        Authority authority = authorityService.getAuthorityByUsername(username);
+        return authority.getAuthority();
+    }
 
+
+
+
+
+    @RequestMapping(value = "/deleteUserFromCommunaute/{id}")
+    public String deleteUserFromCommunaute(@PathVariable("id") String id, Principal principal){
+        //
+        User user = userService.findUserByUsername(id);
+        user.setIdCommunaute(null);
+        userService.save(user);
+        Authority authority=new Authority();
+        authority.setAuthority("USER");
+        authority.setUsername(user.getUsername());
+        authorityService.save(authority);
+        return "redirect:/gerer";
+    }
+
+    @RequestMapping(value = "/QuiteCommunaute")
+    public String QuiteCommunaute(Principal principal){
+        //
+        User user = userService.findUserByUsername(principal.getName());
+        user.setIdCommunaute(null);
+        userService.save(user);
+        Authority authority=new Authority();
+        authority.setAuthority("USER");
+        authority.setUsername(user.getUsername());
+        authorityService.save(authority);
+        return "redirect:/";
+    }
 
 }

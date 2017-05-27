@@ -157,7 +157,7 @@
                     <li><a href="gerer.html">Gérer Communauté</a></li>
                     <li><a href="gererDemandes.html" th:text="${'(' + nbDemandes + ') Demandes'}"></a></li>
                 </ul>
-                <li th:case="'MEMBER'"><a href="#contact" th:text="'Quitter ' + communaute" ></a></li>
+                <li th:case="'MEMBRE'"><a th:href="@{/QuiteCommunaute}" th:text="'Quitter ' + communaute" ></a></li>
                 <li><form class="form-horizontal" th:action="@{/logout}" method="POST" style="horiz-align: center;">
                     <input type="submit" value="Logout" />
                 </form></li>
