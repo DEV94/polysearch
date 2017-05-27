@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -107,10 +108,6 @@
             cursor: pointer;
         }
 
-        form{
-            display: inline-block;
-        }
-
 
     </style>
 
@@ -170,85 +167,51 @@
 <div class="container">
 
     <div class="row">
-        <div align="center">
-            <h2 align="center">PolySearch</h2>
-            <div ng-app="Test" style="width:500px;" align="center">
-                <div ng-app="Test">
-                    <div >
-                        <div class="form-group move-down">
-                            <form th:action="@{/search}" method="GET" >
-                                <input type="text" name="query" id="tags" style="width: 500px;" autofocus="autofocus"/>
-                                <button type="submit" style="margin-top: 10px;">Search</button>
-                            </form>
+        <div >
+            <div align="center">
+                <h2 align="center">PolySearch</h2>
+                <div ng-app="Test" style="width:500px;" align="center">
+                    <div ng-app="Test">
+                        <div >
+                            <div class="form-group move-down">
+                                <form th:action="@{/search}" method="GET">
+                                    <input type="text" name="query" id="tags" style="width: 500px;"/>
+                                    <button type="submit" style="margin-top: 10px;">Search</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div><br/>
-        </div>
-        <div class="row carousel-row" th:each="result: ${resultats}">
-            <div>
+                </div><br/>
+            </div>
+            <div class="row carousel-row" th:each="result: ${resultats}">
                 <div>
-                    <form th:action="@{/click}" method="post">
-                        <span th:text="${result.getTitle()}"><b></b></span><br/>
-                        <input type="hidden" name="id" th:value="${result.getId()}"/>
-                        <input type="hidden" name="title" th:value="${result.getTitle()}"/>
-                        <input type="hidden" name="uri" th:value="${result.getUri()}"/>
-                        <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
-                        <input type="submit" th:value="${result.getUri()}" class="link"/>
-                    </form>
-                    <br/>
-                    <div class="acidjs-rating-stars" >
-                        <form th:action="@{/rate}" method="POST">
+                    <div>
+                        <form th:action="@{/click}" method="post">
+                            <span th:text="${result.getTitle()}"><b></b></span><br/>
                             <input type="hidden" name="id" th:value="${result.getId()}"/>
                             <input type="hidden" name="title" th:value="${result.getTitle()}"/>
                             <input type="hidden" name="uri" th:value="${result.getUri()}"/>
                             <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
-                            <input type="hidden" name="rating" value="5"/>
-
-                            <input type="submit" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-0'}" value="5" /><label th:for="${'group-' + result.getId() + '-0'}" ></label>
+                            <input type="submit" th:value="${result.getUri()}" class="link"/>
                         </form>
+                        <div class="acidjs-rating-stars">
+                            <form th:action="@{/rate}" method="POST">
+                                <input type="hidden" name="id" th:value="${result.getId()}"/>
+                                <input type="hidden" name="title" th:value="${result.getTitle()}"/>
+                                <input type="hidden" name="uri" th:value="${result.getUri()}"/>
+                                <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
 
-                        <form th:action="@{/rate}" method="POST">
-                            <input type="hidden" name="id" th:value="${result.getId()}"/>
-                            <input type="hidden" name="title" th:value="${result.getTitle()}"/>
-                            <input type="hidden" name="uri" th:value="${result.getUri()}"/>
-                            <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
-                            <input type="hidden" name="rating" value="4"/>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-0'}" value="5" /><label th:for="${'group-' + result.getId() + '-0'}" ></label>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-1'}" value="4" /><label th:for="${'group-' + result.getId() + '-1'}" ></label>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-2'}" value="3" /><label th:for="${'group-' + result.getId() + '-2'}" ></label>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-3'}" value="2" /><label th:for="${'group-' + result.getId() + '-3'}" ></label>
+                                <input type="radio" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-4'}" value="1" /><label th:for="${'group-' + result.getId() + '-4'}" ></label>
+                            </form>
+                        </div>
 
-                            <input type="submit" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-1'}" value="4" /><label th:for="${'group-' + result.getId() + '-1'}" ></label>
-                        </form>
-                        <form th:action="@{/rate}" method="POST">
-                            <input type="hidden" name="id" th:value="${result.getId()}"/>
-                            <input type="hidden" name="title" th:value="${result.getTitle()}"/>
-                            <input type="hidden" name="uri" th:value="${result.getUri()}"/>
-                            <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
-                            <input type="hidden" name="rating" value="3"/>
-
-                            <input type="submit" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-2'}" value="3" /><label th:for="${'group-' + result.getId() + '-2'}" ></label>
-                        </form>
-
-                        <form th:action="@{/rate}" method="POST">
-                            <input type="hidden" name="id" th:value="${result.getId()}"/>
-                            <input type="hidden" name="title" th:value="${result.getTitle()}"/>
-                            <input type="hidden" name="uri" th:value="${result.getUri()}"/>
-                            <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
-                            <input type="hidden" name="rating" value="2"/>
-
-                            <input type="submit" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-3'}" value="2" /><label th:for="${'group-' + result.getId() + '-3'}" ></label>
-                        </form>
-                        <form th:action="@{/rate}" method="POST">
-                            <input type="hidden" name="id" th:value="${result.getId()}"/>
-                            <input type="hidden" name="title" th:value="${result.getTitle()}"/>
-                            <input type="hidden" name="uri" th:value="${result.getUri()}"/>
-                            <input type="hidden" name="requete" th:value="${result.getRequete()}"/>
-                            <input type="hidden" name="rating" value="1"/>
-
-                            <input type="submit" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-4'}" value="1" /><label th:for="${'group-' + result.getId() + '-4'}" ></label>
-                        </form>
                     </div>
-
-                </div>
-            </div><br/>
+                </div><br/>
+            </div>
         </div>
     </div>
 
