@@ -123,6 +123,9 @@
 </div>
 
 <template id="product-list">
+    <div class="container">
+        <h4>Les informations de la communauté</h4>
+    </div>
     <table class="table">
         <thead style="background-color: #b4b4b3">
         <tr>
@@ -151,7 +154,41 @@
         </tr>
         </tbody>
     </table>
+    <div class="container">
+        <h4>Les utilisateurs de la communauté</h4>
+    </div>
+    <table class="table">
+        <thead style="background-color: #b4b4b3">
+        <tr>
+            <th>username</th>
+            <th class="col-sm-2">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--v-for="product in products | filterBy searchKey in 'name'"-->
+        <!--v-link="{name: 'product', params: {product_id: product.id}}"-->
+        <tr  th:each="user: ${resultatsusers}">
+            <td th:text="${user.getUsername()}"></td>
+            <td>
+                <a class="btn btn-warning btn-xs" th:href="@{/deleteUserFromCommunaute/{id}/(id=${user.getUsername()})}">Retirer</a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
 </template>
+
+
+
+
+
+
+
+
+
+
+
 
 <template id="add-product">
     <h2>Add new product</h2>

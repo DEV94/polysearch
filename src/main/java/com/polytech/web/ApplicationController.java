@@ -44,11 +44,15 @@ public class ApplicationController {
     @Autowired
     private AdhesionService adhesionService;
 
+
     @Autowired
     private RechercheService rechercheService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthorityService authorityService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() throws UnsupportedEncodingException {
@@ -82,9 +86,17 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/gerer", method = RequestMethod.GET)
-    public String gerer(Model model){
-        List<Communaute> communautes = communauteService.selectAll();
-        model.addAttribute("resultats", communautes);
+    public String gerer(Model model,Principal principal){
+
+       // List<Communaute> communautes = communauteService.selectAll();
+        //model.addAttribute("resultats", communautes);
+        Communaute communaute=communauteService.getCommunauteByResponsable(principal.getName());
+        model.addAttribute("resultats", communaute);
+        List<User> users=userService.findUserByidCommunaute(communaute.getId());
+        model.addAttribute("resultatsusers", users);
+        for (User x:users)
+            System.out.println(x.getUsername());
+
         return "gerer";
     }
 
@@ -121,7 +133,7 @@ public class ApplicationController {
     @RequestMapping(value = "/rejoindre")
     public String rejoindre(Model model, Principal principal){
         List<Communaute> communautes = new ArrayList<>();
-        
+
         User user = userService.findUserByUsername(principal.getName());
         if(user.getIdCommunaute()==null) {
             Adhesion adhesion = adhesionService.findAdhesionByUser(principal.getName());
@@ -200,6 +212,20 @@ public class ApplicationController {
     @RequestMapping(value = "/Update", method = RequestMethod.POST)
     public String Update(){
         return  "redirect:/deleteOrUpdateCommunaute";
+    }
+
+/////
+    @RequestMapping(value = "/deleteUserFromCommunaute/{id}")
+    public String deleteUserFromCommunaute(@PathVariable("id") String id, Principal principal){
+        //
+        User user = userService.findUserByUsername(id);
+        user.setIdCommunaute(null);
+        userService.save(user);
+        Authority authority=new Authority();
+        authority.setAuthority("USER");
+        authority.setUsername(user.getUsername());
+        authorityService.save(authority);
+        return "redirect:/gerer";
     }
 
 
