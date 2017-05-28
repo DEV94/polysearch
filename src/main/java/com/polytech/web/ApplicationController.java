@@ -145,7 +145,8 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/rate", method = RequestMethod.POST)
-    public String rate(Requete requete, Principal principal, Model model){
+    public String rate(Result result, Principal principal, Model model){
+        rechercheService.saveResultat(result);
         return "index";
     }
 
