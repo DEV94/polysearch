@@ -98,6 +98,7 @@ public class ApplicationController {
     @RequestMapping(value = "/creerCommunaute", method = RequestMethod.POST)
     public String creerCommunaute(Communaute communaute, Principal principal){
         Communaute communaute1 = communauteService.getCommunauteByResponsable(principal.getName());
+        //System.out.println(communaute1.getId() + communaute1.getNom() + communaute1.getResponsable());
         if(communaute1==null) {
             communaute.setResponsableID(principal.getName());
             System.out.println(communaute.getNom());
@@ -110,6 +111,9 @@ public class ApplicationController {
             for (Authority a : authorityService.selectAll()) {
                 System.out.println(a.getAuthority());
             }
+        }
+        else{
+            System.out.println("A DEJA UNE COMMUNAUTE");
         }
         return "redirect:/";
     }
@@ -158,8 +162,7 @@ public class ApplicationController {
 
     @RequestMapping(value = "/rejoindre/{id}")
     public String adherer(@PathVariable("id") String id, Principal principal){
-
-            adhesionService.save(new Adhesion(id, principal.getName()));
+        adhesionService.save(new Adhesion(id, principal.getName()));
         return "redirect:/rejoindre";
     }
 
@@ -168,7 +171,7 @@ public class ApplicationController {
         String role = getRole(principal.getName());
         model.addAttribute("role", role);
         List<Communaute> communautes = new ArrayList<>();
-
+        
         User user = userService.findUserByUsername(principal.getName());
         if(user.getIdCommunaute()==null) {
             Adhesion adhesion = adhesionService.findAdhesionByUser(principal.getName());

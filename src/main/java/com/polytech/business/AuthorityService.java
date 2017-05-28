@@ -24,12 +24,13 @@ public class AuthorityService {
         authorityRepository.save(authority);
     }
 
-    public List<Authority> selectAll() {
+    public List<Authority> selectAll(){
         return authorityRepository.findAll();
     }
 
-    public Authority getAuthorityByUsername(String username) {
+    public Authority getAuthorityByUsername(String username){
         return authorityRepository.getAuthorityByUsername(username);
     }
 
 }
+
