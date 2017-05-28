@@ -237,6 +237,7 @@
                             <input type="submit" th:name="${'group-' + result.getId()}" th:id="${'group-' + result.getId() + '-3'}" value="2" /><label th:for="${'group-' + result.getId() + '-3'}" ></label>
                         </form>
                         <form th:action="@{/rate}" method="POST">
+
                             <input type="hidden" name="id" th:value="${result.getId()}"/>
                             <input type="hidden" name="title" th:value="${result.getTitle()}"/>
                             <input type="hidden" name="uri" th:value="${result.getUri()}"/>
