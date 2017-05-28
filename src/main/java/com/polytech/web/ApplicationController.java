@@ -139,6 +139,8 @@ public class ApplicationController {
     public String search(Requete requete, Principal principal, Model model){
         requete.setUsername(principal.getName());
         rechercheService.saveRequete(requete);
+        List<Requete> res = rechercheService.getResults("polytechnique");
+        System.out.println("RES SIZE : " + res.size());
         Crawler obj = new Crawler();
         List<Result> results = obj.getDataFromGoogle(requete.getQuery().replace(" ", "+"));
         for(Result temp : results){

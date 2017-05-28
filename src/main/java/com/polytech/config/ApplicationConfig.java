@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -22,6 +23,7 @@ import javax.sql.DataSource;
 @Import(SecurityConfig.class)
 @EnableJpaRepositories(basePackages = "com.polytech.repository")
 @EnableMongoRepositories(basePackages = "com.polytech.repository")
+@EnableElasticsearchRepositories(basePackages = "com.polytech.repository.elastic")
 @EntityScan(basePackages = "com.polytech.models")
 public class ApplicationConfig {
 

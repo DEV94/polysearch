@@ -1,6 +1,7 @@
 package com.polytech.models;
 
 import org.springframework.data.annotation.*;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 import javax.persistence.*;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
  */
 @Entity
 @Table(name = "requetes")
+@Document(indexName = "polysearch", type = "requete")
 public class Requete {
 
     @Id

@@ -1,10 +1,12 @@
 package com.polytech.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 
 /**
  * Created by E.Marouane on 20/05/2017.
  */
+
 public class Result {
 
     @Id
