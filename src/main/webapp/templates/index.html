@@ -161,6 +161,7 @@
                     <li><a href="gererDemandes.html" th:text="${'(' + nbDemandes + ') Demandes'}"></a></li>
                 </ul>
                 <li th:case="'MEMBRE'"><a th:href="@{/QuiteCommunaute}" th:text="'Quitter ' + communaute" ></a></li>
+                <li><a href="compte.html" th:text="${user.getUsername()}"></a></li>
                 <li><form class="form-horizontal" th:action="@{/logout}" method="POST" style="horiz-align: center;">
                     <input type="submit" value="Logout" />
                 </form></li>
@@ -177,8 +178,8 @@
         <div align="center">
             <h2 align="center">PolySearch</h2>
             <div ng-app="Test" style="width:500px;" align="center">
-                <div ng-app="Test">
-                    <div >
+                <div ng-app="Test" th:hidden="${isUser}">
+                    <div>
                         <div class="form-group move-down">
                             <form th:action="@{/search}" method="GET" >
                                 <input type="text" name="query" id="tags" style="width: 500px;"/>

@@ -84,11 +84,11 @@
                     <li><a href="rejoindre.html">Rejoindre Communauté</a></li>
                 </ul>
                 <ul class="nav navbar-nav" th:case="'RESPONSABLE'">
-                    <li class="active"><a href="deleteOrUpdateCommunaute.html">Gérer Communauté</a></li>
+                    <li><a href="deleteOrUpdateCommunaute.html">Gérer Communauté</a></li>
                     <li><a href="gererDemandes.html" th:text="${'(' + nbDemandes + ') Demandes'}"></a></li>
                 </ul>
-                <li th:case="'MEMBRE'"><a href="#contact">Quitter Communauté</a></li>
-                <li><a href="compte.html" th:text="${user.getUsername()}"></a></li>
+                <li th:case="'MEMBRE'"><a th:href="@{/QuiteCommunaute}" th:text="'Quitter ' + communaute" ></a></li>
+                <li class="active"><a href="compte.html" th:text="${user.getUsername()}"></a></li>
                 <li><form class="form-horizontal" th:action="@{/logout}" method="POST" style="horiz-align: center;">
                     <input type="submit" value="Logout" />
                 </form></li>
@@ -103,24 +103,54 @@
     <div class="row">
         <div align="left">
             <h2>PolySearch</h2>
-            <h4>Supprimer ou modifier une Communauté</h4>
-            <form th:action="@{/UpdateCommunaute}" method="POST">
+            <h4>Mon Compte</h4>
+            <div align="center">
+            <form th:action="@{/UpdateCompte}" method="POST" style="display: inline-block">
                 <div class="form-group row">
-                    <input name="id" th:value="${communaute.getId()}" type="hidden"/>
-
-                    <label for="example-text-input" class="col-2 col-form-label">Nom Communauté :</label>
+                    <label for="example-text-input" class="col-2 col-form-label">Username :</label>
                     <div class="col-10">
-                        <input name="nom" th:value="${communaute.getNom()}"/>
+                        <input name="username" disabled="true" th:value="${user.getUsername()}"/>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="exampleTextarea">Description :</label>
-                    <textarea class="form-control" id="exampleTextarea" rows="3" name="description" th:text="${communaute.getDescription()}"></textarea>
+                    <label for="example-text-input">Nom : </label>
+                    <div class="col-10">
+                        <input name="nom" id="nom" th:value="${user.getNom()}"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="example-text-input">Prenom : </label>
+                    <div class="col-10">
+                        <input name="prenom" id="prenom" th:value="${user.getPrenom()}"/>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Modifier</button>
-                <a class="btn btn-warning btn-xs" th:href="@{/deleteCommunaute/{id}/(id=${communaute.getId()})}">Retirer</a>
+            </form>
+            <form th:action="@{/UpdatePassword}" method="POST" style="display: inline-block; margin-left: 300px;">
+                <div class="form-group row">
+                    <label for="example-text-input">Nouveau Mot de passe : </label>
+                    <div class="col-10">
+                        <input type="password" name="newPassword" id="newPassword" />
+                        <span style="color: red;" th:hidden="${pni}" >Mots de Passe non identiques</span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="example-text-input">Confirmation Mot de passe : </label>
+                    <div class="col-10">
+                        <input type="password" name="confPassword" id="confPassword" />
+                    </div>
+                </div>
+                <!--<div class="form-group row">
+                    <label for="example-text-input">Date de Naissance : </label>
+                    <div class="col-10">
+                        <input type="date" name="dateNaissance" th:value="${user.getDateNaissance()}" />
+
+                    </div>
+                </div>-->
+                <button type="submit" class="btn btn-primary">Modifier</button>
 
             </form>
+            </div>
         </div>
     </div>
 

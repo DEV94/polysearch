@@ -91,17 +91,17 @@
         </div>
         <div class="collapse navbar-collapse" th:switch="${role}">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Accueil</a></li>
+                <li ><a href="/">Accueil</a></li>
                 <ul class="nav navbar-nav" th:case="'USER'">
                     <li><a href="creer.html">Créer Communauté</a></li>
                     <li><a href="rejoindre.html">Rejoindre Communauté</a></li>
                 </ul>
                 <ul class="nav navbar-nav" th:case="'RESPONSABLE'">
-                    <li><a href="gerer.html">Gérer Communauté</a></li>
+                    <li class="active"><a href="gerer.html">Gérer Communauté</a></li>
                     <li><a href="gererDemandes.html" th:text="${'(' + nbDemandes + ') Demandes'}"></a></li>
                 </ul>
                 <li th:case="'MEMBRE'"><a href="#contact">Quitter Communauté</a></li>
-
+                <li><a href="compte.html" th:text="${user.getUsername()}"></a></li>
                 <li><form class="form-horizontal" th:action="@{/logout}" method="POST" style="horiz-align: center;">
                     <input type="submit" value="Logout" />
                 </form></li>

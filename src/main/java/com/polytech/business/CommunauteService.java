@@ -40,6 +40,10 @@ public class CommunauteService {
         return communauteMongoRepository.findCommunauteByResponsable(responsable);
     }
 
+    public Communaute getCommunauteByNom(String nom){
+        return communauteMongoRepository.findCommunauteByNom(nom);
+    }
+
     public void delete(String idCommunaute){
         communauteMongoRepository.delete(idCommunaute);
     }

@@ -11,7 +11,6 @@ import javax.persistence.Id;
  */
 @Entity
 @Table(name = "requetes")
-@Document(indexName = "polysearch", type = "requete")
 public class Requete {
 
     @Id

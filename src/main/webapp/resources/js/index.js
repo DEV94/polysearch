@@ -1,13 +1,17 @@
 $(function() {
-    var availableTags = [
-        "Requete1",
-        "Test1",
-        "Spring",
-        "Java",
-        "C"
-    ];
-    $( "#tags" ).autocomplete({
-        source: availableTags
+    var availableTags=[];
+    $.ajax({
+        type: "GET",
+        url: "/autocomplite",
+        success: function (result) {
+            availableTags = result;
+            $( "#tags" ).autocomplete({
+                source: availableTags
+            });
+        },
+        error: function (req, status, error) {
+
+        }
     });
 });
 angular.module( "ngAutocomplete", [])

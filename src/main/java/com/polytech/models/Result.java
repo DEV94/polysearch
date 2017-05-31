@@ -7,6 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
  * Created by E.Marouane on 20/05/2017.
  */
 
+@Document(indexName = "polysearch", type = "result")
 public class Result {
 
     @Id

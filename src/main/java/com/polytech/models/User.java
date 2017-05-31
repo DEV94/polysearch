@@ -3,6 +3,7 @@ package com.polytech.models;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by dev on 4/11/17.
@@ -24,6 +25,15 @@ public class User {
 
     @Column(name = "enabled")
     private int enable;
+
+    @Transient
+    private String nom;
+
+    @Transient
+    private String prenom;
+
+    @Transient
+    private Date dateNaissance;
 
     public User(){
 
@@ -48,6 +58,7 @@ public class User {
     }
 
     public void setPassword(String password) {
+        System.out.println("SET : " + password);
         this.password = new BCryptPasswordEncoder().encode(password);
     }
 
@@ -71,5 +82,29 @@ public class User {
 
     public void setIdCommunaute(String idCommunaute) {
         this.idCommunaute = idCommunaute;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public Date getDateNaissance() {
+        return dateNaissance;
+    }
+
+    public void setDateNaissance(Date dateNaissance) {
+        this.dateNaissance = dateNaissance;
     }
 }

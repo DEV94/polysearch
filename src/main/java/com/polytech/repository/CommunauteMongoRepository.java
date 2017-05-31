@@ -15,5 +15,7 @@ public interface CommunauteMongoRepository extends MongoRepository<Communaute, S
 
     public Communaute findCommunauteByResponsable(String responsable);
 
+    public Communaute findCommunauteByNom(String nom);
+
 
 }
